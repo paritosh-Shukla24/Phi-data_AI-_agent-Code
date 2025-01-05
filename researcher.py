@@ -2,21 +2,26 @@ from phi.agent import Agent
 from phi.tools.hackernews import HackerNews
 from phi.tools.duckduckgo import DuckDuckGo
 from phi.tools.newspaper4k import Newspaper4k
+from phi.model.deepseek import DeepSeekChat
+
+# agent = Agent(model=DeepSeekChat(), markdown=True)
 import os
-from dotenv import load_dotenv
-load_dotenv()
-import openai
-client = openai.OpenAI(
-    base_url="https://api.groq.com/openai/v1",
-    api_key=os.environ.get("GROQ_API_KEY")
-)
+# from dotenv import load_dotenv
+# load_dotenv()
+# import openai
+api_key = "sk-73e35969f1b04f3e930d123830926eec"
+
+# If using a custom API endpoint, set the base_url (optional)
+# api_base = "https://api.deepseek.com"
 hn_researcher = Agent(
+model=DeepSeekChat(api_key=api_key),
     name="HackerNews Researcher",
     role="Gets top stories from hackernews.",
     tools=[HackerNews()],
 )
 
 web_searcher = Agent(
+model=DeepSeekChat(api_key=api_key),
     name="Web Searcher",
     role="Searches the web for information on a topic",
     tools=[DuckDuckGo()],
@@ -30,6 +35,7 @@ article_reader = Agent(
 )
 
 hn_team = Agent(
+model=DeepSeekChat(api_key=api_key),
     name="Hackernews Team",
     team=[hn_researcher, web_searcher, article_reader],
     instructions=[
